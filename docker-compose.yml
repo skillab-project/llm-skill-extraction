@@ -33,7 +33,7 @@ services:
       db:
         condition: service_healthy
     ports:
-      - "8888:8080"
+      - "8889:8080"
     networks:
       - upskilling-recommender-network
     env_file:
