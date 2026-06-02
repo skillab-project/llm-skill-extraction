@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  # ==============================================================================
+  # 1. ORCHESTRATOR SERVICE: CV EXTRACTOR
+  # ==============================================================================
+  # Role: The entry point of the system. Handles file upload (PDF), text extraction
+  # and communicates with the LLM and Normalizer services.
+  cv-extractor:
+    build:
+      context: ./skill_extractor
+      dockerfile: Dockerfile
+    container_name: cv_skill_extractor
+    ports:
+      - "8000:8000"  # Exposes the FastAPI Swagger UI to the host machine
+    environment:
+      # --- Inter-Service Communication Configuration ---
+      # Endpoint for the GenAI Inference Engine (Internal Docker Network)
+      - OLLAMA_URL=http://ollama:11434/api/generate
+
+      # Endpoint for the Semantic Normalization Service (Internal Docker Network)
+      # Communicates directly via the container name 'esco-api' on port 8001
+      - NORMALIZER_URL=http://esco-api:8001/normalize
+    depends_on:
+      - esco-api
+    volumes:
+      # Mounts the local source code to the container for development (Hot-Reloading)
+      - ./skill_extractor:/app/skill_extractor
+
+  # ==============================================================================
+  # 2. SEMANTIC SEARCH SERVICE: ESCO NORMALIZER
+  # ==============================================================================
+  # Role: Specialized microservice for mapping raw skills to the ESCO taxonomy
+  # using Vector Embeddings (Sentence-BERT).
+  esco-api:
+    build:
+      context: ./skill_normalizer
+      dockerfile: Dockerfile
+    container_name: esco_api_service
+    ports:
+      - "8001:8001"  # Exposes the Normalization API (Host: 8001 -> Container: 8001)
+    volumes:
+      # Mounts the source code and data files to the container
+      - ./skill_normalizer:/app/skill_normalizer
