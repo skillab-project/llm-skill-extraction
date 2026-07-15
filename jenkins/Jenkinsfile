@@ -8,6 +8,7 @@ pipeline {
 
     environment {
         APP_NAME      = "llm-skill-extraction-app"
+        API_NAME      = "llm-skill-extraction-esco-api"
 		MAJOR_RELEASE = 0.1
         DOCKER_TAG = "${MAJOR_RELEASE}.${env.BUILD_NUMBER}"
         DOCKER_REG = "harbor.skillab-project.eu"
@@ -47,6 +48,10 @@ pipeline {
                     sh 'docker image push ${DOCKER_REG}${DOCKER_REPO}${APP_NAME}:${DOCKER_TAG}'
                     sh 'docker image tag ${DOCKER_REG}${DOCKER_REPO}${APP_NAME}:${DOCKER_TAG} ${DOCKER_REG}${DOCKER_REPO}${APP_NAME}:latest'
                     sh 'docker image push ${DOCKER_REG}${DOCKER_REPO}${APP_NAME}:latest'
+
+                    sh 'docker image push ${DOCKER_REG}${DOCKER_REPO}${API_NAME}:${DOCKER_TAG}'
+                    sh 'docker image tag ${DOCKER_REG}${DOCKER_REPO}${API_NAME}:${DOCKER_TAG} ${DOCKER_REG}${DOCKER_REPO}${API_NAME}:latest'
+                    sh 'docker image push ${DOCKER_REG}${DOCKER_REPO}${API_NAME}:latest'
                 }
             }
         }
@@ -66,6 +71,11 @@ pipeline {
                     sh 'docker image tag ${DOCKER_REG}${DOCKER_REPO}${APP_NAME}:${DOCKER_TAG} ${USERNAME}/${APP_NAME}:latest'
                     sh 'docker image push ${USERNAME}/${APP_NAME}:${DOCKER_TAG}'
                     sh 'docker image push ${USERNAME}/${APP_NAME}:latest'
+
+                    sh 'docker image tag ${DOCKER_REG}${DOCKER_REPO}${API_NAME}:${DOCKER_TAG} ${USERNAME}/${API_NAME}:${DOCKER_TAG}'
+                    sh 'docker image tag ${DOCKER_REG}${DOCKER_REPO}${API_NAME}:${DOCKER_TAG} ${USERNAME}/${API_NAME}:latest'
+                    sh 'docker image push ${USERNAME}/${API_NAME}:${DOCKER_TAG}'
+                    sh 'docker image push ${USERNAME}/${API_NAME}:latest'
                 }
             }
         }
@@ -98,6 +108,7 @@ pipeline {
         failure{
             // slackSend (color: "#FF0000", message: "Job FAILED: '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
             sh 'docker image rm ${APP_NAME}:test &> /dev/null || true'
+            sh 'docker image rm ${API_NAME}:test &> /dev/null || true'
             sh 'DOCKER_TAG=test docker compose down --rmi all'
         }
     }
