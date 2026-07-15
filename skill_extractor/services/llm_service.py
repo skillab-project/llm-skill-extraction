@@ -15,7 +15,8 @@ class LLMService:
     # Configuration for the inference engine
     # The specific model identifier loaded in Ollama
     #MODEL = "llama3.1"
-    API_URL = os.getenv("API_URL")
+    API_URL = "http://160.40.52.27:3000"
+    # API_URL = os.getenv("API_URL")
     API_TOKEN = os.getenv("API_TOKEN")
     MODEL = os.getenv("MODEL_NAME")
     
