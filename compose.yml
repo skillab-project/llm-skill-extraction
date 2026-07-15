@@ -46,3 +46,7 @@ services:
     volumes:
       # Mounts the source code and data files to the container
       - ./skill_normalizer:/app/skill_normalizer
+
+networks:
+  shared-net:
+    external: true
