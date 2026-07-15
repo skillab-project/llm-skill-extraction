@@ -14,6 +14,9 @@ pipeline {
         DOCKER_REG = "harbor.skillab-project.eu"
         DOCKER_REPO = "/skillab-all/"
         DOCKER_REG_CREDS = "harbor-creds"
+        DOCKER_HUB_REG = "docker.io"
+        DOCKER_HUB_CREDS = "docker-hub-creds"
+        DOCKER_HUB_USERNAME = "skillabproject"
     }
 
     stages {
@@ -107,8 +110,8 @@ pipeline {
     post{
         failure{
             // slackSend (color: "#FF0000", message: "Job FAILED: '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-            sh 'docker image rm ${APP_NAME}:test &> /dev/null || true'
-            sh 'docker image rm ${API_NAME}:test &> /dev/null || true'
+            sh 'docker image rm ${DOCKER_REG}${DOCKER_REPO}${APP_NAME}:test &> /dev/null || true'
+            sh 'docker image rm ${DOCKER_REG}${DOCKER_REPO}${API_NAME}:test &> /dev/null || true'
             sh 'DOCKER_TAG=test docker compose down --rmi all'
         }
     }
