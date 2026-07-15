@@ -22,6 +22,8 @@ services:
       - NORMALIZER_URL=http://esco-api:8001/normalize
     depends_on:
       - esco-api
+    networks:
+      - shared-net
     volumes:
       # Mounts the local source code to the container for development (Hot-Reloading)
       - ./skill_extractor:/app/skill_extractor
@@ -39,6 +41,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "7539:8001"  # Exposes the Normalization API (Host: 8001 -> Container: 8001)
+    networks:
+      - shared-net
     volumes:
       # Mounts the source code and data files to the container
       - ./skill_normalizer:/app/skill_normalizer
