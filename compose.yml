@@ -15,7 +15,7 @@ services:
     env_file:
       - .env
     ports:
-      - "8000:8000"  # Exposes the FastAPI Swagger UI to the host machine
+      - "7538:8000"  # Exposes the FastAPI Swagger UI to the host machine
     environment:
       # Endpoint for the Semantic Normalization Service (Internal Docker Network)
       # Communicates directly via the container name 'esco-api' on port 8001
@@ -38,7 +38,7 @@ services:
       context: ./skill_normalizer
       dockerfile: Dockerfile
     ports:
-      - "8001:8001"  # Exposes the Normalization API (Host: 8001 -> Container: 8001)
+      - "7539:8001"  # Exposes the Normalization API (Host: 8001 -> Container: 8001)
     volumes:
       # Mounts the source code and data files to the container
       - ./skill_normalizer:/app/skill_normalizer
