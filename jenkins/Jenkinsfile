@@ -22,7 +22,7 @@ pipeline {
         stage("Build_Docker_Images"){
             steps {
                 echo "***** Building Docker Image *****"
-                withCredentials([usernamePassword(credentialsId: 'llmCerth', apiToken: 'API_TOKEN', modelName: 'MODEL_NAME')]) {
+                withCredentials([usernamePassword(credentialsId: 'llmCerth', passwordVariable: 'API_TOKEN', usernameVariable: 'MODEL_NAME')]) {
                     sh '''
                         echo "API_TOKEN=${API_TOKEN}" >> .env
                         echo "MODEL_NAME=${MODEL_NAME}" >> .env
