@@ -122,7 +122,7 @@ Do NOT write sentences like "No programming skills found". Just list the skills 
                 url, 
                 headers=self.HEADERS, 
                 json=payload, 
-                timeout=300
+                timeout=900
             )
             response.raise_for_status()
 
