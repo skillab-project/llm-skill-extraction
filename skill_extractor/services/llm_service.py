@@ -15,10 +15,12 @@ class LLMService:
     # Configuration for the inference engine
     # The specific model identifier loaded in Ollama
     #MODEL = "llama3.1"
-    API_URL = "http://160.40.52.27:3000"
-    # API_URL = os.getenv("API_URL")
+    # Base URL of an OpenAI-compatible chat API. The code appends "/chat/completions".
+    #   - Remote Open WebUI:  http://160.40.52.27:3000/api
+    #   - Local Ollama (dev): http://ollama:11434/v1
+    API_URL = os.getenv("API_URL", "http://160.40.52.27:3000/api")
     API_TOKEN = os.getenv("API_TOKEN")
-    MODEL = os.getenv("MODEL_NAME")
+    MODEL = os.getenv("MODEL_NAME", "mistral")
     
     # Required headers from your example
     HEADERS = {
@@ -115,8 +117,9 @@ Do NOT write sentences like "No programming skills found". Just list the skills 
         try:
             print(f"Sending request to remote API ({self.MODEL})...")
 
-            # Use the /api/chat/completions endpoint as per your example
-            url = f"{self.API_URL}/api/chat/completions"
+            # OpenAI-compatible chat endpoint. API_URL already includes the version
+            # segment (/api for Open WebUI, /v1 for local Ollama).
+            url = f"{self.API_URL}/chat/completions"
             
             response = requests.post(
                 url, 
