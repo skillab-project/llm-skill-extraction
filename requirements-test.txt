@@ -1,0 +1,11 @@
+# Test-only dependencies. sentence-transformers is NOT needed: the tests stub the model.
+pytest
+httpx
+fastapi
+python-multipart
+pydantic
+requests
+pypdf
+python-docx
+numpy
+scikit-learn
